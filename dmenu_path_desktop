@@ -1,7 +1,11 @@
 #!/bin/bash
-entries=$(ls /usr/share/applications/)
+list_desktop_entries() {
+	for dir in ${XDG_DATA_DIRS//:/ }; do
+		# Find all desktop files and print basename. Ignore errors.
+		find "$dir/applications" -name '*.desktop' -printf "%f\n" 2>/dev/null;
+	done | sort -u
+}
+entries=$(list_desktop_entries)
 for entry in $entries; do
-	if [[ $entry == *.desktop ]]; then
-		echo "${entry%.*}"
-	fi
+	echo "${entry%.*}"
 done;
